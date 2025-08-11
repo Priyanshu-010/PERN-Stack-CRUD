@@ -80,6 +80,8 @@ export const deleteProduct = async (req, res) => {
     if (deletedProduct.length === 0) {
       return res.status(404).json({success: false, message: "Product not found"});
     }
+    console.log("Deleted product: ", deletedProduct[0]);
+    res.status(200).json({success: true, data: deletedProduct[0]});
   } catch (error) {
     console.log("Error in deleteProduct ", error);
     res.status(500).json({success: false, message: "Failed to delete product internal server error"});
