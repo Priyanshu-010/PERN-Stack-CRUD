@@ -7,6 +7,7 @@ export const useProductStore = create((set, get) =>({
   products: [],
   loading: false,
   error : null,
+  currentProduct: null,
   formData:{  // object created to hold form data
     name: "",
     price: "",
@@ -63,5 +64,37 @@ export const useProductStore = create((set, get) =>({
         set({error: "An unexpected error occurred"});
       }
     }
-  }
+  },
+  fetchProduct: async (id)=>{
+    set({loading: true});
+    try {
+      const response = await axios.get(`${BASE_URL}/api/products/${id}`);
+      set({currentProduct: response.data.data,
+        formData: response.data.data, // Populate formData with fetched product data
+        error: null});
+    } catch (error) {
+      console.log("Error fetching product:", error);
+      if(error.response) {
+        set({error: error.response.data.message});
+      } else {
+        set({error: "An unexpected error occurred"});
+      }
+    } finally {
+      set({loading: false});
+    }
+  },
+  updateProduct: async (id) => {
+    set({ loading: true });
+    try {
+      const { formData } = get();
+      const response = await axios.put(`${BASE_URL}/api/products/${id}`, formData);
+      set({ currentProduct: response.data.data });
+      toast.success("Product updated successfully");
+    } catch (error) {
+      toast.error("Something went wrong");
+      console.log("Error in updateProduct function", error);
+    } finally {
+      set({ loading: false });
+    }
+  },
 }));
