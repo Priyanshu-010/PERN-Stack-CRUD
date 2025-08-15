@@ -3,10 +3,35 @@ import axios from "axios";
 import toast from "react-hot-toast";
 
 const BASE_URL = "http://localhost:3000"
-export const useProductStore = create((set) =>({
+export const useProductStore = create((set, get) =>({
   products: [],
   loading: false,
   error : null,
+  formData:{  // object created to hold form data
+    name: "",
+    price: "",
+    image: "",
+  },
+
+  setFormData: (formData) => set({formData}),
+  resetForm: () =>set({formData:{name: "", price: "", image: ""}}),
+  addProduct: async (e)=>{
+    e.preventDefault();
+    set({loading: true});
+    try {
+      const { formData } = get();
+      await axios.post(`${BASE_URL}/api/products`, formData);
+      await get().fetchProducts();
+      get().resetForm();
+      toast.success("Product added successfully");
+      document.getElementById("add_product_modal").close(); // Close the modal after adding product
+    } catch (error) {
+      console.log("Error adding product:", error);
+      toast.error("Failed to add product");
+    } finally {
+      set({loading: false});
+    }
+  },
   fetchProducts: async () =>{
     set({loading: true});
     try {
