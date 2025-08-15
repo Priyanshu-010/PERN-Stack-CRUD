@@ -8,6 +8,7 @@ const Homepage = () => {
   useEffect(()=>{
     fetchProducts();
   },[fetchProducts])
+  
   console.log(products);
   return (
      <main className="max-w-6xl mx-auto px-4 py-8 ">
@@ -15,6 +16,7 @@ const Homepage = () => {
         <button
           className="btn btn-primary"
           // onClick={() => document.getElementById("add_product_modal").showModal()}
+          
         >
           <PlusCircleIcon className="size-5 mr-2" />
           Add Product
